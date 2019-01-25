@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Allows the script to be called directly without installing the gem
+begin
+  require 'ghrt'
+rescue LoadError
+  require 'bundler/setup'
+  require 'ghrt'
+end
+
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = 'Usage: ghrt [options]'
+
+  opts.on('-v', '--verbose', 'Run verbosely') do |v|
+    options[:verbose] = v
+  end
+
+  opts.on('-r', '--repo <org/repo>', 'Github repostiory') do |repo|
+    options[:repo] = repo
+  end
+
+  opts.on('-p', '--pull-request <number>', 'Pull request number') do |number|
+    options[:pr] = number
+  end
+
+  opts.on('-s', '--since <yyyy-mm-dd>', 'Only return comments since ISO date') do |date|
+    options[:since] = date
+  end
+end.parse!
+
+raise '--repo and --pull-request parameters must be provided' unless options[:repo] && options[:pr]
+
+puts options if options[:verbose]
+
+puts Ghrt::ReviewerComments.to_html(options[:repo], options[:pr], options[:since], options[:verbose])

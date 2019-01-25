@@ -1,0 +1,18 @@
+AllCops:
+  TargetRubyVersion: 2.5
+
+Documentation:
+  Enabled: false
+
+# Following appears to be problematic with the slack-ruby-bot Gem
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+    - 'lib/tasks/**/*.rake'
+    - 'db/schema.rb'
