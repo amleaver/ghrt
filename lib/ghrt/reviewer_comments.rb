@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'erb'
+require 'kramdown'
 
 module Ghrt
   class ReviewerComments
@@ -28,7 +28,7 @@ module Ghrt
               <a target="_blank" href='#{comment['html_url']}'><h3>##{index + 1} - #{comment['path']}:#{comment['original_position']}</h3></a>
               <div class="pl-3">
                 <pre class="prettyprint"><code>&#{comment['diff_hunk']}</code></pre>
-                <p class="text-muted" style="font-size: 1.1em">#{comment['body']}</p>
+                <div class="text-muted" style="font-size: 1.1em">#{Kramdown::Document.new(comment['body']).to_html}</div>
               </div>
             </div>
           </div>
