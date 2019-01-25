@@ -8,6 +8,12 @@ other developers.
 
 ## Installation
 
+### From RubyGems.org
+
+```gem install ghrt```
+
+### From Source
+
 Clone this repository and run `bundle exec rake install`.
 
 ## Usage
