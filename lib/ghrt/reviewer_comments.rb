@@ -27,7 +27,7 @@ module Ghrt
             <div class="col-xl-12 mb-2">
               <a target="_blank" href='#{comment['html_url']}'><h3>##{index + 1} - #{comment['path']}:#{comment['original_position']}</h3></a>
               <div class="pl-3">
-                <pre class="prettyprint"><code>&#{comment['diff_hunk']}</code></pre>
+                <pre class="prettyprint"><code>#{normalise_diff_hunk(comment['diff_hunk'])}</code></pre>
                 <div class="text-muted" style="font-size: 1.1em">#{Kramdown::Document.new(comment['body']).to_html}</div>
               </div>
             </div>
@@ -42,5 +42,12 @@ module Ghrt
       HTML
     end
     # rubocop:enable Metrics/MethodLength
+
+    # Make hunks 6 lines long and remove headers
+    def self.normalise_diff_hunk(hunk)
+      return hunk.lines.to_a[1..-1].join if hunk.lines.count <= 6
+
+      hunk.lines.to_a[(hunk.lines.count - 6)..-1].join
+    end
   end
 end
