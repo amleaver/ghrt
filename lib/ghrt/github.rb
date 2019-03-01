@@ -11,11 +11,23 @@ module Ghrt
       @repo = repo
       @username = ENV['GITHUB_USERNAME']
       @token = ENV['GITHUB_TOKEN']
+      raise 'GITHUB_USERNAME and GITHUB_TOKEN environment variables must be set' unless @username && @token
+
       @verbose = verbose
     end
 
     def review_comments(pull_request, since)
-      response = query_github("/pulls/#{pull_request}/comments?since=#{since}")
+      response = []
+      page = 1
+
+      loop do
+        paged_response = query_github("/pulls/#{pull_request}/comments?since=#{since}&per_page=100&page=#{page}")
+        break if paged_response.empty?
+
+        response.concat(paged_response)
+        page += 1
+      end
+
       response.select { |comment| comment['user']['login'] == @username }
     end
 
@@ -35,7 +47,7 @@ module Ghrt
     end
 
     def parse_response(response)
-      puts response if @verbose
+      puts response.code if @verbose
       raise "Unexpected API response status #{response.code}" unless response.code == '200'
 
       JSON.parse(response.read_body)

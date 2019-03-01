@@ -30,6 +30,9 @@ OptionParser.new do |opts|
   opts.on('-s', '--since <yyyy-mm-dd>', 'Only return comments since ISO date') do |date|
     options[:since] = date
   end
+
+  opts.separator ''
+  opts.separator "Version #{Ghrt::VERSION}"
 end.parse!
 
 raise '--repo and --pull-request parameters must be provided' unless options[:repo] && options[:pr]
