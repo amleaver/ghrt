@@ -4,6 +4,7 @@ require 'uri'
 require 'net/http'
 require 'json'
 require 'base64'
+require 'date'
 
 module Ghrt
   class Github
@@ -28,7 +29,10 @@ module Ghrt
         page += 1
       end
 
-      response.select { |comment| comment['user']['login'] == @username }
+      response.select do |comment|
+        comment['user']['login'] == @username &&
+        DateTime.parse(comment['created_at']) >= DateTime.parse(since) if since
+      end
     end
 
     private
